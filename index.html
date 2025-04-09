@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pythagoras Calculator</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-light: #4895ef;
+            --secondary: #3f37c9;
+            --accent: #f72585;
+            --dark: #222;
+            --light: #f8f9fa;
+            --success: #4cc9f0;
+            --gray: #adb5bd;
+            --light-gray: #e9ecef;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            margin: 2rem 0;
+            overflow: hidden;
+        }
+        
+        .flex-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem;
+        }
+        
+        .visual-section {
+            flex: 1;
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .form-section {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .triangle-diagram {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 1.1rem;
+        }
+        
+        input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--light-gray);
+            border-radius: 8px;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            outline: none;
+        }
+        
+        input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.3);
+        }
+        
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: center;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary);
+        }
+        
+        .btn-secondary {
+            background-color: var(--light-gray);
+            color: var(--dark);
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--gray);
+            color: white;
+        }
+        
+        .btn i {
+            font-size: 1rem;
+        }
+        
+        .result-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            margin: 1rem 0 2rem;
+            padding: 2rem;
+            display: none;
+        }
+        
+        .result-card h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        
+        .result-step {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .result-step:last-child {
+            border-bottom: none;
+        }
+        
+        .final-result {
+            margin-top: 1rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--accent);
+            text-align: center;
+        }
+        
+        .info-text {
+            background-color: rgba(76, 201, 240, 0.1);
+            border-left: 4px solid var(--success);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        footer {
+            background-color: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 3rem;
+        }
+        
+        .explanation {
+            margin-top: 1rem;
+            padding: 1.5rem;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+        
+        .explanation h2 {
+            color: var(--secondary);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        
+        .explanation p {
+            margin-bottom: 1rem;
+        }
+        
+        .explanation img {
+            max-width: 100%;
+            margin: 1rem 0;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .flex-container {
+                flex-direction: column-reverse;
+                gap: 1rem;
+            }
+            
+            .visual-section, .form-section {
+                width: 100%;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <h1>Pythagoras Calculator</h1>
+            <p class="subtitle">Calculate the sides of a right-angled triangle using the Pythagorean theorem: a² + b² = c²</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <div class="flex-container">
+                <div class="visual-section">
+                    <div class="triangle-diagram">
+                        <svg width="300" height="300" viewBox="0 0 300 300">
+                            <!-- Triangle -->
+                            <polygon points="50,250 250,250 50,50" 
+                                style="fill: rgba(67, 97, 238, 0.1); stroke: var(--primary); stroke-width: 3;" />
+                            
+                            <!-- Right angle symbol -->
+                            <rect x="55" y="245" width="15" height="15" 
+                                style="fill: none; stroke: var(--accent); stroke-width: 3;" />
+                            
+                            <!-- Labels -->
+                            <text x="145" y="270" fill="var(--dark)" font-size="22" font-weight="bold" text-anchor="middle">a</text>
+                            <text x="30" y="150" fill="var(--dark)" font-size="22" font-weight="bold" text-anchor="middle">b</text>
+                            <text x="160" y="140" fill="var(--dark)" font-size="22" font-weight="bold" text-anchor="middle">c</text>
+                        </svg>
+                    </div>
+                    
+                    <div class="info-text">
+                        <p>Fill in two values and leave the third empty. Click "Calculate" to find the missing side.</p>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <form id="pythagorasForm">
+                        <div class="form-group">
+                            <label for="a">Side a:</label>
+                            <input type="number" id="a" placeholder="Enter value for side a" step="any">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="b">Side b:</label>
+                            <input type="number" id="b" placeholder="Enter value for side b" step="any">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="c">Hypotenuse c:</label>
+                            <input type="number" id="c" placeholder="Enter value for hypotenuse c" step="any">
+                        </div>
+                        
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary" onclick="calculate()">
+                                <i class="fas fa-calculator"></i> Calculate
+                            </button>
+                            <button type="reset" class="btn btn-secondary" onclick="resetCalculator()">
+                                <i class="fas fa-redo"></i> Reset
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div id="resultCard" class="result-card">
+            <h3>Calculation Results</h3>
+            <div id="calculationSteps"></div>
+            <div id="finalResult" class="final-result"></div>
+        </div>
+        
+        <div class="explanation">
+            <h2>Understanding the Pythagorean Theorem</h2>
+            <p>The Pythagorean theorem states that in a right-angled triangle, the square of the length of the hypotenuse (c) is equal to the sum of the squares of the other two sides (a and b).</p>
+            <p>Mathematically expressed as: <strong>a² + b² = c²</strong></p>
+            <p>From this formula, we can derive:</p>
+            <ul>
+                <li>To find the hypotenuse: <strong>c = √(a² + b²)</strong></li>
+                <li>To find side a: <strong>a = √(c² - b²)</strong></li>
+                <li>To find side b: <strong>b = √(c² - a²)</strong></li>
+            </ul>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>© Laksindu janith thanthreege</p>
+        </div>
+    </footer>
+
+    <script>
+        function calculate() {
+            let a = document.getElementById('a').value;
+            let b = document.getElementById('b').value;
+            let c = document.getElementById('c').value;
+            
+            const resultCard = document.getElementById('resultCard');
+            const calculationSteps = document.getElementById('calculationSteps');
+            const finalResult = document.getElementById('finalResult');
+            
+            // Reset results
+            calculationSteps.innerHTML = '';
+            let steps = '';
+            let result = '';
+            let solvedValue = 0;
+            let errorMsg = '';
+            
+            // Count empty fields
+            let emptyCount = 0;
+            if (a === '') emptyCount++;
+            if (b === '') emptyCount++;
+            if (c === '') emptyCount++;
+            
+            // Validate inputs
+            if (emptyCount !== 1) {
+                errorMsg = 'Please fill exactly two values and leave one empty.';
+                alert(errorMsg);
+                return;
+            }
+            
+            // Convert to numbers
+            a = a !== '' ? parseFloat(a) : '';
+            b = b !== '' ? parseFloat(b) : '';
+            c = c !== '' ? parseFloat(c) : '';
+            
+            // Check for negative values
+            if ((a !== '' && a <= 0) || (b !== '' && b <= 0) || (c !== '' && c <= 0)) {
+                errorMsg = 'All sides must be positive numbers.';
+                alert(errorMsg);
+                return;
+            }
+            
+            // Check if c is indeed the longest side
+            if (c !== '' && a !== '' && c <= a) {
+                errorMsg = 'The hypotenuse (c) must be longer than side a.';
+                alert(errorMsg);
+                return;
+            }
+            
+            if (c !== '' && b !== '' && c <= b) {
+                errorMsg = 'The hypotenuse (c) must be longer than side b.';
+                alert(errorMsg);
+                return;
+            }
+            
+            // Display the result card
+            resultCard.style.display = 'block';
+            
+            // Calculate the missing side
+            if (a === '') {
+                // Solving for a
+                steps += '<div class="result-step">Solving for side a</div>';
+                steps += '<div class="result-step">Formula: a = √(c² - b²)</div>';
+                steps += `<div class="result-step">a = √(${c}² - ${b}²)</div>`;
+                steps += `<div class="result-step">a = √(${(c*c).toFixed(4)} - ${(b*b).toFixed(4)})</div>`;
+                
+                let expression = (c*c) - (b*b);
+                if (expression < 0) {
+                    errorMsg = 'Cannot calculate: c² - b² results in a negative value. Check your inputs.';
+                    alert(errorMsg);
+                    resultCard.style.display = 'none';
+                    return;
+                }
+                
+                steps += `<div class="result-step">a = √(${expression.toFixed(4)})</div>`;
+                
+                solvedValue = Math.sqrt(expression);
+                result = `a = ${solvedValue.toFixed(4)}`;
+                document.getElementById('a').value = solvedValue.toFixed(4);
+                
+            } else if (b === '') {
+                // Solving for b
+                steps += '<div class="result-step">Solving for side b</div>';
+                steps += '<div class="result-step">Formula: b = √(c² - a²)</div>';
+                steps += `<div class="result-step">b = √(${c}² - ${a}²)</div>`;
+                steps += `<div class="result-step">b = √(${(c*c).toFixed(4)} - ${(a*a).toFixed(4)})</div>`;
+                
+                let expression = (c*c) - (a*a);
+                if (expression < 0) {
+                    errorMsg = 'Cannot calculate: c² - a² results in a negative value. Check your inputs.';
+                    alert(errorMsg);
+                    resultCard.style.display = 'none';
+                    return;
+                }
+                
+                steps += `<div class="result-step">b = √(${expression.toFixed(4)})</div>`;
+                
+                solvedValue = Math.sqrt(expression);
+                result = `b = ${solvedValue.toFixed(4)}`;
+                document.getElementById('b').value = solvedValue.toFixed(4);
+                
+            } else if (c === '') {
+                // Solving for c
+                steps += '<div class="result-step">Solving for hypotenuse c</div>';
+                steps += '<div class="result-step">Formula: c = √(a² + b²)</div>';
+                steps += `<div class="result-step">c = √(${a}² + ${b}²)</div>`;
+                steps += `<div class="result-step">c = √(${(a*a).toFixed(4)} + ${(b*b).toFixed(4)})</div>`;
+                steps += `<div class="result-step">c = √(${((a*a)+(b*b)).toFixed(4)})</div>`;
+                
+                solvedValue = Math.sqrt((a*a)+(b*b));
+                result = `c = ${solvedValue.toFixed(4)}`;
+                document.getElementById('c').value = solvedValue.toFixed(4);
+            }
+            
+            calculationSteps.innerHTML = steps;
+            finalResult.innerHTML = result;
+            
+            // Smooth scroll to result
+            resultCard.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function resetCalculator() {
+            document.getElementById('resultCard').style.display = 'none';
+            document.getElementById('calculationSteps').innerHTML = '';
+            document.getElementById('finalResult').innerHTML = '';
+        }
+    </script>
+</body>
+</html>
